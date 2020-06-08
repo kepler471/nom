@@ -1,0 +1,13 @@
+word2vec
+numpy
+scipy==1.1.0
+pillow
+lmdb
+torchfile
+scikit-learn
+tqdm
+nltk
+pandas
+simplejson
+torch
+torchvision
