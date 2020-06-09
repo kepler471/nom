@@ -4,6 +4,10 @@ import pickle
 import sys
 from tqdm import *
 import time
+import os
+import ijson
+from itertools import islice
+
 
 def readfile(filename):
     with open(filename,'r') as f:
@@ -40,8 +44,25 @@ if __name__ == "__main__":
     except:
         partition = ''
 
-    dets = json.load(open('../data/recipe1M/det_ingrs.json','r'))
-    layer1 = json.load(open('../data/recipe1M/layer1.json','r'))
+    try:
+        num_to_load = int(sys.arg[2])
+    except KeyError:
+        num_to_load = 200
+
+    dets_loc = os.path.dirname(os.path.abspath(__file__)) + '/../data/recipe1M/det_ingrs.json'
+    layer1_loc = os.path.dirname(os.path.abspath(__file__)) + '/../data/recipe1M/layer1.json'
+    dets_iterator = ijson.parse(open(dets_loc,'r'))
+    layer1_iterator = ijson.parse(open(layer1_loc,'r'))
+
+    with open(layer1_loc) as f:
+        item = ijson.items(f, 'item')
+        objects = islice(item, num_to_load)
+        layer1 = [item for item in objects]
+
+    with open(dets_loc) as f:
+        item = ijson.items(f, 'item')
+        objects = islice(item, num_to_load)
+        dets = [item for item in objects]
 
     idx2ind = {}
     ingrs = []
